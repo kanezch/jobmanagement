@@ -33,7 +33,7 @@ public class Schedule {
 
     @NotNull
     @Column(name = "widget_id",unique = true)
-    private Long widgetId;
+    private String widgetId;
 
     @NotBlank
     @Column(name = "schedule_name", columnDefinition = "text")

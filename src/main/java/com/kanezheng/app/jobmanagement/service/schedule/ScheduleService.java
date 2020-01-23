@@ -7,9 +7,12 @@ public interface ScheduleService {
 
     public Schedule createSchedule(Schedule schedule) throws Exception;
 
-    public Schedule getScheduleByWidgetId(Long widgetId) throws Exception;
+    public Schedule getScheduleByWidgetId(String widgetId) throws Exception;
 
     public Schedule updateSchedule(Long scheduleId, Schedule newSchedule) throws Exception;
 
-    public ResponseEntity deleteSchedule(Long scheduleId) throws Exception;
+    public void deleteSchedule(Long scheduleId) throws Exception;
+
+    public void deleteScheduleByWidgetId(String widgetId) throws Exception;
+
 }

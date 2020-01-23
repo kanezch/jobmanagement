@@ -19,7 +19,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public Schedule getScheduleByWidgetId(Long widgetId) throws Exception {
+	public Schedule getScheduleByWidgetId(String widgetId) throws Exception {
 		return scheduleRepository.findByWidgetId(widgetId);
 	}
 
@@ -42,11 +42,20 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public ResponseEntity deleteSchedule(Long scheduleId) throws Exception {
-		return scheduleRepository.findById(scheduleId)
-				.map(schedule -> {
-					scheduleRepository.delete(schedule);
-					return ResponseEntity.noContent().build();
-				}).orElseThrow(() -> new ResourceNotFoundException("Schedule not found with id " + scheduleId));
+	public void deleteSchedule(Long scheduleId) throws Exception {
+		scheduleRepository.deleteById(scheduleId);
+	}
+
+/*	@Override 与下面的代码对比，建议用jpa 的 derived delete query
+	public void deleteScheduleByWidgetId(String widgetId) throws Exception{
+		Schedule schedule= scheduleRepository.findByWidgetId(widgetId);
+		if (null != schedule){
+			scheduleRepository.delete(schedule);
+		}
+	}*/
+
+	@Override
+	public void deleteScheduleByWidgetId(String widgetId) throws Exception{
+		scheduleRepository.deleteByWidgetId(widgetId);
 	}
 }

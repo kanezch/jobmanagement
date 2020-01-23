@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/dashboard/{dashboardId}/widget/{widgetId}")
 public class ScheduleController {
     Logger logger = LoggerFactory.getLogger(ScheduleController.class);
 
@@ -18,24 +19,36 @@ public class ScheduleController {
     private ScheduleService scheduleService;
 
     @PostMapping("/schedule")
-    public Schedule createSchedule(@Valid @RequestBody Schedule schedule) throws Exception{
+    public Schedule createSchedule(@PathVariable Long dashboardId,
+                                   @PathVariable String widgetId,
+                                   @Valid @RequestBody Schedule schedule) throws Exception{
         return scheduleService.createSchedule(schedule);
     }
 
     @GetMapping("/schedule")
-    public Schedule getSchedule(@RequestParam(value = "widgetId")Long widgetId) throws Exception{
+    public Schedule getSchedule(@PathVariable Long dashboardId, @PathVariable String widgetId) throws Exception{
 
         return scheduleService.getScheduleByWidgetId(widgetId);
     }
 
     @PutMapping("/schedule/{scheduleId}")
-    public Schedule updateSchedule(@PathVariable Long scheduleId,
+    public Schedule updateSchedule(@PathVariable Long dashboardId,
+                                   @PathVariable String widgetId,
+                                   @PathVariable Long scheduleId,
                                    @Valid @RequestBody Schedule scheduleRequest) throws Exception{
         return scheduleService.updateSchedule(scheduleId, scheduleRequest);
     }
 
     @DeleteMapping("/schedule/{scheduleId}")
-    public ResponseEntity<?> deleteSchedule(@PathVariable Long scheduleId) throws Exception{
-        return scheduleService.deleteSchedule(scheduleId);
+    public void deleteSchedule(@PathVariable Long dashboardId,
+                                            @PathVariable String widgetId,
+                                            @PathVariable Long scheduleId) throws Exception{
+        scheduleService.deleteSchedule(scheduleId);
     }
+
+/*    @DeleteMapping("/schedule")
+    public void deleteSchedule(@PathVariable Long dashboardId,
+                               @PathVariable String widgetId) throws Exception{
+        scheduleService.deleteScheduleByWidgetId(widgetId);
+    }*/
 }
