@@ -42,7 +42,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public void deleteSchedule(Long scheduleId) throws Exception {
+	public void deleteSchedule(Long scheduleId) {
 		scheduleRepository.deleteById(scheduleId);
 	}
 
@@ -55,7 +55,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}*/
 
 	@Override
-	public void deleteScheduleByWidgetId(String widgetId) throws Exception{
+	public void deleteScheduleByWidgetId(String widgetId){
 		scheduleRepository.deleteByWidgetId(widgetId);
 	}
 }
