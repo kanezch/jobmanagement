@@ -29,11 +29,10 @@ enum SchedulePeriod {
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotNull
-    @Column(name = "widget_id", unique = true)
+    @Column(name = "widget_id")
     private String widgetId;
 
     @NotBlank
@@ -44,21 +43,25 @@ public class Schedule {
     @ElementCollection
     private Set<String> emailRecipients = new HashSet();*/
 
+    @NotNull
     @Column(name = "include_custom_message")
     private Boolean includeCustomMessage;
 
     @Column(name = "custom_message", columnDefinition = "text")
     private String customMessage;
 
-    @Column(name = "initial_deliverTime", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @NotNull
+    @Column(name = "initial_deliver_time", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime initialDeliverTime;
 
+    @NotNull
     @Column(name = "schedule_period_type")
     private SchedulePeriod schedulePeriodType;
 
     @Column(name = "custom_schedule_period")
     private Integer customSchedulePeriod;
 
+    @NotNull
     @Column(name = "include_end_time")
     private Boolean includeEndTime;
 

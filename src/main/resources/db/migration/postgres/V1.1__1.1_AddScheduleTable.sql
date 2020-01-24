@@ -1,19 +1,18 @@
---| [1.0] Initial setup for the Portal Profile
---| Refer to <project_root>/db/init.sh scripts for user/role creation
---| Created by Allan Aquino <allana@buildingiq.com>
+--| [1.1] Create schedule table
+--| Created by Kane <kanez@buildingiq.com>
 
 CREATE SCHEMA IF NOT EXISTS portal;
 
 CREATE TABLE portal.schedule
 (
-    id SERIAL PRIMARY KEY NOT NULL,
-    widget_id text NOT NULL,
-    schedule_name text,
-    include_custom_message boolean,
+    id bigserial NOT NULL PRIMARY KEY,
+    widget_id text NOT NULL UNIQUE,
+    schedule_name text NOT NULL,
+    include_custom_message boolean NOT NULL,
     custom_message text,
-    initial_deliver_time timestamp with time zone,
-    schedule_period_type integer,
+    initial_deliver_time timestamp with time zone NOT NULL,
+    schedule_period_type integer NOT NULL,
     custom_schedule_period integer,
-    include_end_time boolean,
+    include_end_time boolean NOT NULL,
     schedule_end_time timestamp with time zone
 );
