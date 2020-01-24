@@ -29,7 +29,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 				.map(schedule -> {
 					schedule.setScheduleName(newSchedule.getScheduleName());
 					schedule.setCustomMessage(newSchedule.getCustomMessage());
-					schedule.setEmailRecipients(newSchedule.getEmailRecipients());
+//					schedule.setEmailRecipients(newSchedule.getEmailRecipients());
 					schedule.setCustomSchedulePeriod(newSchedule.getCustomSchedulePeriod());
 					schedule.setIncludeCustomMessage(newSchedule.getIncludeCustomMessage());
 					schedule.setInitialDeliverTime(newSchedule.getInitialDeliverTime());

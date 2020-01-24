@@ -29,19 +29,20 @@ enum SchedulePeriod {
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    @Column(columnDefinition = "serial")
+    private Long id;
 
     @NotNull
-    @Column(name = "widget_id",unique = true)
+    @Column(name = "widget_id", unique = true)
     private String widgetId;
 
     @NotBlank
     @Column(name = "schedule_name", columnDefinition = "text")
     private String scheduleName;
 
-    @Column(name = "email_recipients")
+/*    @Column(name = "email_recipients")
     @ElementCollection
-    private Set<String> emailRecipients = new HashSet();
+    private Set<String> emailRecipients = new HashSet();*/
 
     @Column(name = "include_custom_message")
     private Boolean includeCustomMessage;
