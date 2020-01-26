@@ -16,3 +16,21 @@ CREATE TABLE portal.schedule
     include_end_time boolean NOT NULL,
     schedule_end_time timestamp with time zone
 );
+
+/*CREATE TABLE portal.schedule_email_recipients
+(
+    schedule_id bigint NOT NULL,
+    email_recipients character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT fk65pub2vho6ko3b6tu8ab5ksi4 FOREIGN KEY (schedule_id)
+        REFERENCES portal.schedule (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);*/
+
+CREATE TABLE portal.schedule_email_recipients
+(
+    id bigserial NOT NULL PRIMARY KEY,
+    schedule_id bigserial NOT NULL,
+    email_recipients text,
+    FOREIGN KEY (schedule_id) REFERENCES portal.schedule (id)
+);

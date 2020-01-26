@@ -22,6 +22,8 @@ public class ScheduleController {
     public Schedule createSchedule(@PathVariable Long dashboardId,
                                    @PathVariable String widgetId,
                                    @Valid @RequestBody Schedule schedule) throws Exception{
+        logger.info("HHHHHHHH: " + schedule.getEmailRecipients().toString());
+
         return scheduleService.createSchedule(schedule);
     }
 

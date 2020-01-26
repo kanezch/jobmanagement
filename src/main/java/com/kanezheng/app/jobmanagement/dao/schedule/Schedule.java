@@ -39,9 +39,9 @@ public class Schedule {
     @Column(name = "schedule_name", columnDefinition = "text")
     private String scheduleName;
 
-/*    @Column(name = "email_recipients")
     @ElementCollection
-    private Set<String> emailRecipients = new HashSet();*/
+    @CollectionTable(schema = "portal", name = "schedule_email_recipients", joinColumns = @JoinColumn(name = "schedule_id"))
+    private Set<String> emailRecipients = new HashSet<>();
 
     @NotNull
     @Column(name = "include_custom_message")
