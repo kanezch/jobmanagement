@@ -22,7 +22,6 @@ public class ScheduleController {
     public Schedule createSchedule(@PathVariable Long dashboardId,
                                    @PathVariable String widgetId,
                                    @Valid @RequestBody Schedule schedule) throws Exception{
-        logger.info("HHHHHHHH: " + schedule.getEmailRecipients().toString());
 
         return scheduleService.createSchedule(schedule);
     }
@@ -48,9 +47,9 @@ public class ScheduleController {
         scheduleService.deleteSchedule(scheduleId);
     }
 
-/*    @DeleteMapping("/schedule")
+    @DeleteMapping("/schedule")
     public void deleteSchedule(@PathVariable Long dashboardId,
                                @PathVariable String widgetId) throws Exception{
         scheduleService.deleteScheduleByWidgetId(widgetId);
-    }*/
+    }
 }

@@ -28,12 +28,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 		return scheduleRepository.findById(scheduleId)
 				.map(schedule -> {
 					schedule.setScheduleName(newSchedule.getScheduleName());
-					schedule.setCustomMessage(newSchedule.getCustomMessage());
-//					schedule.setEmailRecipients(newSchedule.getEmailRecipients());
-					schedule.setCustomSchedulePeriod(newSchedule.getCustomSchedulePeriod());
+					schedule.setEmailRecipients(newSchedule.getEmailRecipients());
 					schedule.setIncludeCustomMessage(newSchedule.getIncludeCustomMessage());
+					schedule.setCustomMessage(newSchedule.getCustomMessage());
 					schedule.setInitialDeliverTime(newSchedule.getInitialDeliverTime());
-					schedule.setSchedulePeriodType(newSchedule.getSchedulePeriodType());
+					schedule.setScheduleRepeatType(newSchedule.getScheduleRepeatType());
+					schedule.setCustomRepeatType(newSchedule.getCustomRepeatType());
+					schedule.setCustomRepeatValue(newSchedule.getCustomRepeatValue());
 					schedule.setIncludeEndTime(newSchedule.getIncludeEndTime());
 					schedule.setScheduleEndTime(newSchedule.getScheduleEndTime());
 

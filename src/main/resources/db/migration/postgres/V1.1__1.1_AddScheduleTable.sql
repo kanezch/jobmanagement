@@ -11,21 +11,12 @@ CREATE TABLE portal.schedule
     include_custom_message boolean NOT NULL,
     custom_message text,
     initial_deliver_time timestamp with time zone NOT NULL,
-    schedule_period_type integer NOT NULL,
-    custom_schedule_period integer,
+    schedule_repeat_type integer NOT NULL,
+    custom_repeat_type integer,
+    custom_repeat_value integer,
     include_end_time boolean NOT NULL,
     schedule_end_time timestamp with time zone
 );
-
-/*CREATE TABLE portal.schedule_email_recipients
-(
-    schedule_id bigint NOT NULL,
-    email_recipients character varying(255) COLLATE pg_catalog."default",
-    CONSTRAINT fk65pub2vho6ko3b6tu8ab5ksi4 FOREIGN KEY (schedule_id)
-        REFERENCES portal.schedule (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-);*/
 
 CREATE TABLE portal.schedule_email_recipients
 (

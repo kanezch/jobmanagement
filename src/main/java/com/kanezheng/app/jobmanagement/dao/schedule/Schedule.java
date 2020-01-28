@@ -11,13 +11,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-enum SchedulePeriod {
+enum ScheduleRepeatType {
     ONE_OFF,
     DAILY,
     WEEKLY,
     MONTHLY,
     WEEKDAY,
     CUSTOM
+}
+
+enum CustomRepeatType {
+    DAILY,
+    WEEKLY,
+    MONTHLY,
 }
 
 @Table(schema = "portal", name = "schedule")
@@ -55,11 +61,14 @@ public class Schedule {
     private OffsetDateTime initialDeliverTime;
 
     @NotNull
-    @Column(name = "schedule_period_type")
-    private SchedulePeriod schedulePeriodType;
+    @Column(name = "schedule_repeat_type")
+    private ScheduleRepeatType scheduleRepeatType;
 
-    @Column(name = "custom_schedule_period")
-    private Integer customSchedulePeriod;
+    @Column(name = "custom_repeat_type")
+    private CustomRepeatType customRepeatType;
+
+    @Column(name = "custom_repeat_value")
+    private Integer customRepeatValue;
 
     @NotNull
     @Column(name = "include_end_time")
