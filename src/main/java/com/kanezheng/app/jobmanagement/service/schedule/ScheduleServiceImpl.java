@@ -37,6 +37,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 					schedule.setCustomRepeatValue(newSchedule.getCustomRepeatValue());
 					schedule.setIncludeEndTime(newSchedule.getIncludeEndTime());
 					schedule.setScheduleEndTime(newSchedule.getScheduleEndTime());
+					schedule.setCustomRepeatOnWeekdays(newSchedule.getCustomRepeatOnWeekdays());
 
 					return scheduleRepository.save(schedule);
 				}).orElseThrow(() -> new ResourceNotFoundException("Schedule not found with id " + scheduleId));

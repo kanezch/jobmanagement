@@ -26,6 +26,10 @@ enum CustomRepeatType {
     MONTHLY,
 }
 
+enum WeekDays {
+    MON,TUE,WED,THU,FRI,SAT,SUN
+}
+
 @Table(schema = "portal", name = "schedule")
 @Entity
 @Data
@@ -69,6 +73,10 @@ public class Schedule {
 
     @Column(name = "custom_repeat_value")
     private Integer customRepeatValue;
+
+    @ElementCollection
+    @CollectionTable(schema = "portal", name = "custom_repeat_weekdays", joinColumns = @JoinColumn(name = "schedule_id"))
+    private Set<WeekDays> customRepeatOnWeekdays = new HashSet<>();
 
     @NotNull
     @Column(name = "include_end_time")

@@ -25,3 +25,11 @@ CREATE TABLE portal.schedule_email_recipients
     email_recipients text,
     FOREIGN KEY (schedule_id) REFERENCES portal.schedule (id)
 );
+
+CREATE TABLE portal.custom_repeat_weekdays
+(
+    id bigserial NOT NULL PRIMARY KEY,
+    schedule_id bigserial NOT NULL,
+    custom_repeat_on_weekdays integer,
+    FOREIGN KEY (schedule_id) REFERENCES portal.schedule (id)
+);
