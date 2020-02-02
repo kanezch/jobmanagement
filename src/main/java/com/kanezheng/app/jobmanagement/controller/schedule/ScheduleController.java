@@ -1,7 +1,10 @@
 package com.kanezheng.app.jobmanagement.controller.schedule;
 
 import com.kanezheng.app.jobmanagement.dao.schedule.Schedule;
+import com.kanezheng.app.jobmanagement.service.quartzjob.EmailNotifySchedulerService;
+import com.kanezheng.app.jobmanagement.service.quartzjob.EmailNotifySchedulerServiceImpl;
 import com.kanezheng.app.jobmanagement.service.schedule.ScheduleService;
+import org.quartz.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +21,21 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
+    @Autowired
+    private EmailNotifySchedulerService emailNotifySchedulerService;
+
     @PostMapping("/schedule")
     public Schedule createSchedule(@PathVariable Long dashboardId,
                                    @PathVariable String widgetId,
                                    @Valid @RequestBody Schedule schedule) throws Exception{
 
-        return scheduleService.createSchedule(schedule);
+        Schedule scheduleResp = scheduleService.createSchedule(schedule);
+
+        int result = emailNotifySchedulerService.createEmailNotifyJob(schedule);
+
+        logger.info("Craete a job result:", result);
+
+        return scheduleResp;
     }
 
     @GetMapping("/schedule")
