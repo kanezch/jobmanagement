@@ -31,9 +31,9 @@ public class ScheduleController {
 
         Schedule scheduleResp = scheduleService.createSchedule(schedule);
 
-        int result = emailNotifySchedulerService.createEmailNotifyJob(schedule);
+//        int result = emailNotifySchedulerService.createEmailNotifyJob(schedule);
 
-        logger.info("Craete a job result:", result);
+//        logger.info("Create a job result:", result);
 
         return scheduleResp;
     }
@@ -41,6 +41,7 @@ public class ScheduleController {
     @GetMapping("/schedule")
     public Schedule getSchedule(@PathVariable Long dashboardId, @PathVariable String widgetId) throws Exception{
 
+//        throw new Exception();
         return scheduleService.getScheduleByWidgetId(widgetId);
     }
 

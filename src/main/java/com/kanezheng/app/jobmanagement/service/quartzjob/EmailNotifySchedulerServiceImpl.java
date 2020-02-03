@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static org.quartz.JobBuilder.newJob;
+import static org.quartz.JobKey.jobKey;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
+import static org.quartz.TriggerKey.triggerKey;
 
 @Service
 public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerService{
@@ -62,11 +64,29 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
 
     @Override
     public int updateEmailNotifyJob(Schedule schedule) throws Exception {
+
+        // Define a new Trigger
+        Trigger trigger = newTrigger()
+                .withIdentity("newTrigger", "group1")
+                .startNow()
+                .withSchedule(simpleSchedule().withIntervalInSeconds(5).repeatForever())
+                .build();
+
+        // tell the scheduler to remove the old trigger with the given key, and put the new one in its place
+        scheduler.rescheduleJob(triggerKey("trigger1", "group1"), trigger);
+
+        logger.info("Reschedule job, replace trigger1 with newTrigger");
         return 0;
     }
 
-    @Override
+/*    @Override
     public void deleteEmailNotifyJob(Schedule schedule) throws Exception {
+        scheduler.deleteJob(jobKey("job1", "group1"));
+        logger.info("Delete job1!");
+    }*/
 
+    @Override
+    public void deleteEmailNotifyJob() throws Exception {
+        scheduler.deleteJob(jobKey("job1", "group1"));
     }
 }

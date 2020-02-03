@@ -1,8 +1,12 @@
 package com.kanezheng.app.jobmanagement.service.schedule;
 
+import com.kanezheng.app.jobmanagement.controller.schedule.ScheduleController;
 import com.kanezheng.app.jobmanagement.dao.schedule.Schedule;
 import com.kanezheng.app.jobmanagement.exception.ResourceNotFoundException;
 import com.kanezheng.app.jobmanagement.repository.schedule.ScheduleRepository;
+import com.kanezheng.app.jobmanagement.service.quartzjob.EmailNotifySchedulerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,12 +14,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
 
+	Logger logger = LoggerFactory.getLogger(ScheduleServiceImpl.class);
+
 	@Autowired
 	ScheduleRepository scheduleRepository;
 
+	@Autowired
+	private EmailNotifySchedulerService emailNotifySchedulerService;
+
 	@Override
-	public Schedule createSchedule(Schedule schedule) throws Exception {
-		return scheduleRepository.save(schedule);
+	public Schedule createSchedule(Schedule scheduleReq) throws Exception {
+
+		int result = emailNotifySchedulerService.createEmailNotifyJob(scheduleReq);
+		if (result == 0){
+			Schedule scheduleResp = scheduleRepository.save(scheduleReq);
+			logger.info("Create schedule in the schedule service!");
+			return scheduleResp;
+		}
+
+		return null;
 	}
 
 	@Override
@@ -25,6 +42,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public Schedule updateSchedule(Long scheduleId, Schedule newSchedule) throws Exception {
+
+		emailNotifySchedulerService.updateEmailNotifyJob(newSchedule);
 		return scheduleRepository.findById(scheduleId)
 				.map(schedule -> {
 					schedule.setScheduleName(newSchedule.getScheduleName());
@@ -45,6 +64,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public void deleteSchedule(Long scheduleId) {
+
+		try {
+			emailNotifySchedulerService.deleteEmailNotifyJob();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		scheduleRepository.deleteById(scheduleId);
 	}
 
