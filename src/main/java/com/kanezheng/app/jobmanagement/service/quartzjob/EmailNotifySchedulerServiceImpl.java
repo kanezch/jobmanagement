@@ -1,8 +1,8 @@
 package com.kanezheng.app.jobmanagement.service.quartzjob;
 
 import com.kanezheng.app.jobmanagement.dao.schedule.Schedule;
-import com.kanezheng.app.jobmanagement.jobs.HelloWorldJob;
-import org.quartz.JobDataMap;
+import com.kanezheng.app.jobmanagement.jobs.EmailNotifyJob;
+import com.kanezheng.app.jobmanagement.util.ScheduleUtil;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
@@ -22,6 +22,7 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
 
 
     Logger logger = LoggerFactory.getLogger(EmailNotifySchedulerServiceImpl.class);
+    static final String EMAIL_NOTIFY_JOBS_GROUP = "EmailNotifyJobs";
 
     @Autowired
     private final Scheduler scheduler;
@@ -31,29 +32,29 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
     }
 
     @Override
-    public int createEmailNotifyJob(Schedule schedule) throws Exception {
-
-        String jobNumber = "1";
-
-        String jobName = "job"+jobNumber;
-        String triggerName = "trigger"+jobNumber;
-
-        JobDataMap jobDataMap = new JobDataMap();
+    public int createEmailNotifyJob(String userName, Long dashboardId, Schedule schedule) throws Exception {
 
 
-        JobDetail job = newJob(HelloWorldJob.class)
-                .withIdentity(jobName, "group1")
-                .usingJobData("jobName", jobName)
-                .build();
+        String namePostFix = ScheduleUtil.composeEmailNotifyJobName(userName,
+                                                                    dashboardId,
+                                                                    schedule.getWidgetId(),
+                                                                    schedule.getId());
+        String jobName = "EmailJob-" + namePostFix;
+        String triggerName = "EmailTrigger-" + namePostFix;
+
+        JobDetail job = newJob(EmailNotifyJob.class)
+                        .withIdentity(jobName, EMAIL_NOTIFY_JOBS_GROUP)
+                        .usingJobData("userName", userName)
+                        .usingJobData("dashboardId", dashboardId)
+                        .usingJobData("widgetId", schedule.getWidgetId())
+                        .usingJobData("scheduleId", schedule.getId())
+                        .build();
 
         Trigger trigger = newTrigger()
-                .withIdentity(triggerName, "group1")
-                .startNow()
-                .withSchedule(simpleSchedule()
-                        .withIntervalInSeconds(1)
-                        .repeatForever())
-                .build();
-
+                        .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
+                        .startNow()
+                        .withSchedule(simpleSchedule().withIntervalInSeconds(1).repeatForever())
+                        .build();
 
         scheduler.scheduleJob(job, trigger);
 

@@ -31,9 +31,9 @@ public class ScheduleController {
 
         Schedule scheduleResp = scheduleService.createSchedule(schedule);
 
-//        int result = emailNotifySchedulerService.createEmailNotifyJob(schedule);
+        int result = emailNotifySchedulerService.createEmailNotifyJob("kane", dashboardId, scheduleResp);
 
-//        logger.info("Create a job result:", result);
+        logger.info("Create a job result:", result);
 
         return scheduleResp;
     }

@@ -19,20 +19,20 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Autowired
 	ScheduleRepository scheduleRepository;
 
-	@Autowired
-	private EmailNotifySchedulerService emailNotifySchedulerService;
+/*	@Autowired
+	private EmailNotifySchedulerService emailNotifySchedulerService;*/
 
 	@Override
 	public Schedule createSchedule(Schedule scheduleReq) throws Exception {
 
-		int result = emailNotifySchedulerService.createEmailNotifyJob(scheduleReq);
+/*		int result = emailNotifySchedulerService.createEmailNotifyJob(scheduleReq);
 		if (result == 0){
 			Schedule scheduleResp = scheduleRepository.save(scheduleReq);
 			logger.info("Create schedule in the schedule service!");
 			return scheduleResp;
-		}
+		}*/
 
-		return null;
+		return scheduleRepository.save(scheduleReq);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public Schedule updateSchedule(Long scheduleId, Schedule newSchedule) throws Exception {
 
-		emailNotifySchedulerService.updateEmailNotifyJob(newSchedule);
+//		emailNotifySchedulerService.updateEmailNotifyJob(newSchedule);
 		return scheduleRepository.findById(scheduleId)
 				.map(schedule -> {
 					schedule.setScheduleName(newSchedule.getScheduleName());
@@ -66,7 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public void deleteSchedule(Long scheduleId) {
 
 		try {
-			emailNotifySchedulerService.deleteEmailNotifyJob();
+//			emailNotifySchedulerService.deleteEmailNotifyJob();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
