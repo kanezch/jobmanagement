@@ -2,6 +2,7 @@ package com.kanezheng.app.jobmanagement.service.quartzjob;
 
 import com.kanezheng.app.jobmanagement.dao.schedule.Schedule;
 import com.kanezheng.app.jobmanagement.jobs.EmailNotifyJob;
+import com.kanezheng.app.jobmanagement.repository.schedule.EmailNotifyJobRepository;
 import com.kanezheng.app.jobmanagement.util.ScheduleUtil;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.JobKey.jobKey;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 import static org.quartz.TriggerKey.triggerKey;
 
@@ -25,11 +27,10 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
     static final String EMAIL_NOTIFY_JOBS_GROUP = "EmailNotifyJobs";
 
     @Autowired
-    private final Scheduler scheduler;
+    private Scheduler scheduler;
 
-    public EmailNotifySchedulerServiceImpl(Scheduler scheduler) {
-        this.scheduler = scheduler;
-    }
+    @Autowired
+    private EmailNotifyJobRepository emailNotifyJobRepository;
 
     @Override
     public int createEmailNotifyJob(String userName, Long dashboardId, Schedule schedule) throws Exception {
@@ -48,13 +49,20 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
                         .usingJobData("dashboardId", dashboardId)
                         .usingJobData("widgetId", schedule.getWidgetId())
                         .usingJobData("scheduleId", schedule.getId())
+                        .withDescription(jobName)
+//                        .usingJobData("repository", String.valueOf(emailNotifyJobRepository))
                         .build();
 
+
+        String cronExpression = ScheduleUtil.composeCronExpression(schedule);
+        logger.info("composeCronExpression: {}", cronExpression);
+
         Trigger trigger = newTrigger()
-                        .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
-                        .startNow()
-                        .withSchedule(simpleSchedule().withIntervalInSeconds(1).repeatForever())
-                        .build();
+                .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
+                .startNow()
+                .withSchedule(cronSchedule(cronExpression))
+                .forJob(jobName, EMAIL_NOTIFY_JOBS_GROUP)
+                .build();
 
         scheduler.scheduleJob(job, trigger);
 

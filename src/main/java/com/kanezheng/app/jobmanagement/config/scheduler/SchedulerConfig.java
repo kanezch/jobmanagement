@@ -2,10 +2,16 @@ package com.kanezheng.app.jobmanagement.config.scheduler;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.spi.JobFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
+
+import java.io.IOException;
 
 
 @Configuration
@@ -13,8 +19,7 @@ public class SchedulerConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(SchedulerConfig.class);
 
-/*
-    @Bean
+/*    @Bean
     public JobFactory jobFactory(ApplicationContext applicationContext) {
         AutowiringSpringBeanJobFactory jobFactory = new AutowiringSpringBeanJobFactory();
         jobFactory.setApplicationContext(applicationContext);
@@ -22,17 +27,18 @@ public class SchedulerConfig {
     }
 
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean(JobFactory jobFactory, Trigger simpleJobTrigger)
+    public SchedulerFactoryBean schedulerFactoryBean(*//*JobFactory jobFactory, Trigger simpleJobTrigger*//*)
             throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
-        factory.setJobFactory(jobFactory);
+*//*        factory.setJobFactory(jobFactory);
         factory.setQuartzProperties(quartzProperties());
-        factory.setTriggers(simpleJobTrigger);
+        factory.setTriggers(simpleJobTrigger);*//*
+        factory.start();
         LOG.info("starting jobs....");
         return factory;
-    }
+    }*/
 
-    @Bean
+/*    @Bean
     public SimpleTriggerFactoryBean simpleJobTrigger(@Qualifier("simpleJobDetail") JobDetail jobDetail,
                                                      @Value("${simplejob.frequency}") long frequency) {
         LOG.info("simpleJobTrigger");
@@ -59,8 +65,7 @@ public class SchedulerConfig {
         factoryBean.setJobClass(SimpleJob.class);
         factoryBean.setDurability(true);
         return factoryBean;
-    }
-*/
+    }*/
 
 
 

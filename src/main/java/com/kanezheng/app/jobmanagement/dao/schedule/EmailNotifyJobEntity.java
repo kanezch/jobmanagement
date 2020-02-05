@@ -7,13 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-enum EmailJobStatus {
-    STANDBY,
-    PROCESSING,
-    SUCCESS,
-    FAILED
-}
-
 @Table(schema = "portal", name = "email_notify_jobs_queue")
 @Entity
 @Data
@@ -31,8 +24,8 @@ public class EmailNotifyJobEntity {
 
     private String widgetId;
 
-    private String scheduleId;
+    private Long scheduleId;
 
-    private  EmailJobStatus status;
+    private EmailJobStatus status;
 
 }
