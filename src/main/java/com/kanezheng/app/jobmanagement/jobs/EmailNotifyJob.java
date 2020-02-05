@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import java.time.OffsetDateTime;
+
 import static com.kanezheng.app.jobmanagement.dao.schedule.EmailJobStatus.STANDBY;
 
 @Component
@@ -42,7 +44,7 @@ public class EmailNotifyJob implements Job{
                                                 .status(emailJobStatus)
                                                 .build();
 
-        logger.info("####Before save to database####");
+        logger.info("####Before save to database####, time:{}", OffsetDateTime.now());
 
 //        emailNotifyJobRepository.save(emailNotifyJobEntity);
 

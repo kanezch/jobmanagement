@@ -38,8 +38,8 @@ public class ScheduleUtil {
         logger.info("###Before composeCronExpression");
 
         Cron cron = CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))
-                .withYear(always())
-                .withDoM(between(SpecialChar.L, 3))
+//                .withYear(questionMark())
+                .withDoM(always())
                 .withMonth(always())
                 .withDoW(questionMark())
                 .withHour(always())

@@ -1,6 +1,8 @@
 package com.kanezheng.app.jobmanagement.service.quartzjob;
 
 import com.kanezheng.app.jobmanagement.dao.schedule.Schedule;
+import com.kanezheng.app.jobmanagement.dao.schedule.ScheduleRepeatType;
+import com.kanezheng.app.jobmanagement.dao.schedule.ScheduleRepeatType.*;
 import com.kanezheng.app.jobmanagement.jobs.EmailNotifyJob;
 import com.kanezheng.app.jobmanagement.repository.schedule.EmailNotifyJobRepository;
 import com.kanezheng.app.jobmanagement.util.ScheduleUtil;
@@ -11,6 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.TimeZone;
 
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.JobKey.jobKey;
@@ -35,7 +43,6 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
     @Override
     public int createEmailNotifyJob(String userName, Long dashboardId, Schedule schedule) throws Exception {
 
-
         String namePostFix = ScheduleUtil.composeEmailNotifyJobName(userName,
                                                                     dashboardId,
                                                                     schedule.getWidgetId(),
@@ -54,19 +61,43 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
                         .build();
 
 
-        String cronExpression = ScheduleUtil.composeCronExpression(schedule);
-        logger.info("composeCronExpression: {}", cronExpression);
+/*        //TEST ONE-OFF
+        OffsetDateTime odt2 = OffsetDateTime.of(LocalDateTime.of(2020, 02, 05, 15, 15),
+                ZoneOffset.of("+11:00"));
+        Date d2 = Date.from(odt2.toInstant());
 
-        Trigger trigger = newTrigger()
-                .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
-                .startNow()
-                .withSchedule(cronSchedule(cronExpression))
-                .forJob(jobName, EMAIL_NOTIFY_JOBS_GROUP)
-                .build();
+        logger.info("odt2:{}", odt2);
+        logger.info("d2:{}", d2);*/
+
+
+        Trigger trigger = null;
+        if (schedule.getScheduleRepeatType() == ScheduleRepeatType.ONE_OFF){
+
+            Date triggerStartTime = Date.from(schedule.getInitialDeliverTime().toInstant());
+
+            logger.info("getInitialDeliverTime:{}", schedule.getInitialDeliverTime());
+            logger.info("The job will be trigger at:{}", triggerStartTime);
+
+            trigger = newTrigger()
+            .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
+            .startAt(triggerStartTime)
+            .forJob(jobName, EMAIL_NOTIFY_JOBS_GROUP)
+            .build();
+        }else{
+            String cronExpression = ScheduleUtil.composeCronExpression(schedule);
+            logger.info("composeCronExpression: {}", cronExpression);
+
+             trigger = newTrigger()
+                    .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
+                    .startNow()
+                    .withSchedule(cronSchedule(cronExpression))
+                    .forJob(jobName, EMAIL_NOTIFY_JOBS_GROUP)
+                    .build();
+
+            logger.info("scheduler.scheduleJob");
+        }
 
         scheduler.scheduleJob(job, trigger);
-
-        logger.info("scheduler.scheduleJob");
 
         return 0;
     }

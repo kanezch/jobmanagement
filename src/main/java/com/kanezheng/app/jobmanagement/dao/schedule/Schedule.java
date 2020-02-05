@@ -11,15 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-enum ScheduleRepeatType {
-    ONE_OFF,
-    DAILY,
-    WEEKLY,
-    MONTHLY,
-    WEEKDAY,
-    CUSTOM
-}
-
 enum CustomRepeatType {
     DAILY,
     WEEKLY,
