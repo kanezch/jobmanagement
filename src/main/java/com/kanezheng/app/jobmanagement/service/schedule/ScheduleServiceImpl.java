@@ -1,15 +1,14 @@
 package com.kanezheng.app.jobmanagement.service.schedule;
 
-import com.kanezheng.app.jobmanagement.controller.schedule.ScheduleController;
 import com.kanezheng.app.jobmanagement.dao.schedule.Schedule;
 import com.kanezheng.app.jobmanagement.exception.ResourceNotFoundException;
 import com.kanezheng.app.jobmanagement.repository.schedule.ScheduleRepository;
-import com.kanezheng.app.jobmanagement.service.quartzjob.EmailNotifySchedulerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {

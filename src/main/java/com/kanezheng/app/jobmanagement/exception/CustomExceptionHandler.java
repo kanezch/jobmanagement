@@ -15,23 +15,28 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
-@ControllerAdvice(assignableTypes = ScheduleController.class)
+//@ControllerAdvice(assignableTypes = ScheduleController.class)
 public class CustomExceptionHandler{
 
     Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);
 
-    @ExceptionHandler(Exception.class)
+
+    @ExceptionHandler(ScheduleNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorResponse handleScheduleNotFoundException(final ScheduleNotFoundException ex) {
+        logger.error("Schedule not found exceptioin", ex);
+        return new ErrorResponse(1001, "The schedule was not found");
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public final ErrorResponse handleAllExceptions(Exception ex, WebRequest request) {
 
-        logger.info("handleAllExceptions!!!!");
+        logger.info("CustomExceptionHandler_handleAllExceptions.");
 
-//        return new ApiResponse(1000, "this is a custom exception!", null);
-/*        ApiResponse customResponse = new ApiResponse(1000, "this is a custom exception!", null);
-        return new ResponseEntity(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);*/
-        return new ErrorResponse(1000, "Not found!");
-
+        return new ErrorResponse(1000, "There is an exception.");
     }
 
     @Data

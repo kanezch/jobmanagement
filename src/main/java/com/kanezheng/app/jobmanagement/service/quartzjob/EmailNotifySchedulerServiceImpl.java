@@ -119,14 +119,12 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
         return 0;
     }
 
-/*    @Override
-    public void deleteEmailNotifyJob(Schedule schedule) throws Exception {
-        scheduler.deleteJob(jobKey("job1", "group1"));
-        logger.info("Delete job1!");
-    }*/
-
     @Override
-    public void deleteEmailNotifyJob() throws Exception {
-        scheduler.deleteJob(jobKey("job1", "group1"));
+    public void deleteEmailNotifyJob(String userName, Long dashboardId, String widgetId, Long scheduleId) throws Exception {
+        String namePostFix = ScheduleUtil.composeEmailNotifyJobName(userName, dashboardId, widgetId, scheduleId);
+        String jobName = "EmailJob-" + namePostFix;
+
+        scheduler.deleteJob(jobKey(jobName, EMAIL_NOTIFY_JOBS_GROUP));
+        logger.info("Delete job {} success", jobName );
     }
 }

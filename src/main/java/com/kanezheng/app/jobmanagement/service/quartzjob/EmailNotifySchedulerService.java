@@ -7,5 +7,5 @@ public interface EmailNotifySchedulerService {
 
     public int updateEmailNotifyJob(Schedule schedule) throws Exception;
 
-    public void deleteEmailNotifyJob() throws Exception;
+    public void deleteEmailNotifyJob(String userName, Long dashboardId, String widgetId, Long scheduleId) throws Exception;
 }
