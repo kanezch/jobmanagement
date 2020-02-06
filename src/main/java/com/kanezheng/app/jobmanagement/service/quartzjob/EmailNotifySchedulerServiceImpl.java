@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.TimeZone;
@@ -60,45 +61,37 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
 //                        .usingJobData("repository", String.valueOf(emailNotifyJobRepository))
                         .build();
 
-
-/*        //TEST ONE-OFF
-        OffsetDateTime odt2 = OffsetDateTime.of(LocalDateTime.of(2020, 02, 05, 15, 15),
-                ZoneOffset.of("+11:00"));
-        Date d2 = Date.from(odt2.toInstant());
-
-        logger.info("odt2:{}", odt2);
-        logger.info("d2:{}", d2);*/
-
-
         Trigger trigger = null;
         if (schedule.getScheduleRepeatType() == ScheduleRepeatType.ONE_OFF){
 
             Date triggerStartTime = Date.from(schedule.getInitialDeliverTime().toInstant());
-
-            logger.info("getInitialDeliverTime:{}", schedule.getInitialDeliverTime());
-            logger.info("The job will be trigger at:{}", triggerStartTime);
-
             trigger = newTrigger()
             .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
             .startAt(triggerStartTime)
             .forJob(jobName, EMAIL_NOTIFY_JOBS_GROUP)
             .build();
-        }else{
-            String cronExpression = ScheduleUtil.composeCronExpression(schedule);
-            logger.info("composeCronExpression: {}", cronExpression);
 
-             trigger = newTrigger()
+            logger.info("[Schedule CRUD] This one time job will be triggered at {}", triggerStartTime);
+
+        }else{
+
+            String cronExpression = ScheduleUtil.composeCronExpression(schedule);
+            ZoneId zoneId = ZoneId.ofOffset("UTC",schedule.getInitialDeliverTime().getOffset());
+            TimeZone timeZone = TimeZone.getTimeZone(zoneId);
+
+            trigger = newTrigger()
                     .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
                     .startNow()
-                    .withSchedule(cronSchedule(cronExpression))
+                    .withSchedule(cronSchedule(cronExpression).inTimeZone(timeZone))
                     .forJob(jobName, EMAIL_NOTIFY_JOBS_GROUP)
                     .build();
 
-            logger.info("scheduler.scheduleJob");
+            String humanReadableTxt = ScheduleUtil.translateCronExpressToHumanReadableTxt(cronExpression);
+            logger.info("[Schedule CRUD] This cron job will be triggered : {} in timezone {}", humanReadableTxt, zoneId);
         }
 
         scheduler.scheduleJob(job, trigger);
-
+        logger.info("[Schedule CRUD] Schedule a new job:{}", jobName);
         return 0;
     }
 
@@ -125,6 +118,6 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
         String jobName = "EmailJob-" + namePostFix;
 
         scheduler.deleteJob(jobKey(jobName, EMAIL_NOTIFY_JOBS_GROUP));
-        logger.info("Delete job {} success", jobName );
+        logger.info("[Schedule CRUD] Delete job {} success", jobName);
     }
 }

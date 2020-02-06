@@ -32,11 +32,15 @@ public class ScheduleController {
                                    @PathVariable String widgetId,
                                    @Valid @RequestBody Schedule schedule) throws Exception{
 
+        logger.info("[Schedule CRUD] Request to create a schedule, schedule info = {}", schedule);
+
         Schedule scheduleResp = scheduleService.createSchedule(schedule);
 
-        int result = emailNotifySchedulerService.createEmailNotifyJob("kane", dashboardId, scheduleResp);
+        int result = emailNotifySchedulerService.createEmailNotifyJob("kane", dashboardId, schedule);
 
-        logger.info("Create a job result:{}", result);
+        if (0 == result){
+            logger.info("[Schedule CRUD] Create schedule success, schedule info: {}", scheduleResp);
+        }
 
         return scheduleResp;
     }
