@@ -1,7 +1,6 @@
 package com.kanezheng.app.jobmanagement.service.schedule;
 
 import com.kanezheng.app.jobmanagement.dao.schedule.Schedule;
-import org.springframework.http.ResponseEntity;
 
 public interface ScheduleService {
 
