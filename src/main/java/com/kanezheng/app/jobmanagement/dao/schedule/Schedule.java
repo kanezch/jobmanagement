@@ -11,12 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-enum CustomRepeatType {
-    DAILY,
-    WEEKLY,
-    MONTHLY,
-}
-
 enum WeekDays {
     MON,TUE,WED,THU,FRI,SAT,SUN
 }

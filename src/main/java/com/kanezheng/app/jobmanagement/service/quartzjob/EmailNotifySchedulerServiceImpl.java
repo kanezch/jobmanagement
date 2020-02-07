@@ -1,5 +1,6 @@
 package com.kanezheng.app.jobmanagement.service.quartzjob;
 
+import com.kanezheng.app.jobmanagement.dao.schedule.CustomRepeatType;
 import com.kanezheng.app.jobmanagement.dao.schedule.Schedule;
 import com.kanezheng.app.jobmanagement.dao.schedule.ScheduleRepeatType;
 import com.kanezheng.app.jobmanagement.dao.schedule.ScheduleRepeatType.*;
@@ -21,6 +22,8 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static com.kanezheng.app.jobmanagement.dao.schedule.CustomRepeatType.DAYS;
+import static com.kanezheng.app.jobmanagement.dao.schedule.ScheduleRepeatType.CUSTOM;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.JobKey.jobKey;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
@@ -62,9 +65,9 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
                         .build();
 
         Trigger trigger = null;
+        Date triggerStartTime = Date.from(schedule.getInitialDeliverTime().toInstant());
         if (schedule.getScheduleRepeatType() == ScheduleRepeatType.ONE_OFF){
 
-            Date triggerStartTime = Date.from(schedule.getInitialDeliverTime().toInstant());
             trigger = newTrigger()
             .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
             .startAt(triggerStartTime)
@@ -72,6 +75,18 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
             .build();
 
             logger.info("[Schedule CRUD] This one time job will be triggered at {}", triggerStartTime);
+
+        }else if ((schedule.getScheduleRepeatType() == CUSTOM) &&
+                  (schedule.getCustomRepeatType()== DAYS)){
+
+            trigger = newTrigger()
+                    .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
+                    .startAt(triggerStartTime)
+                    .withSchedule(simpleSchedule().withIntervalInHours(schedule.getCustomRepeatValue() * 24))
+                    .build();
+
+            logger.info("[Schedule CRUD] New job will be triggered at {}, and repeat every {} days.",
+                    triggerStartTime,schedule.getCustomRepeatValue());
 
         }else{
 
