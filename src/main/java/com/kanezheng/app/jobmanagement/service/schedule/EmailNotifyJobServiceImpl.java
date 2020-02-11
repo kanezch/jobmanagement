@@ -21,13 +21,18 @@ public class EmailNotifyJobServiceImpl implements EmailNotifyJobService {
     @Override
     public EmailNotifyJobEntity getEmailNotifyJob() throws Exception {
 
-        EmailNotifyJobEntity emailNotifyJobEntity = EmailNotifyJobEntity.builder().userName("kane")
+/*        EmailNotifyJobEntity emailNotifyJobEntity = EmailNotifyJobEntity.builder().userName("kane")
                 .dashboardId(0L)
                 .widgetId("1234-5678")
                 .scheduleId(0L)
                 .status(EmailJobStatus.STANDBY)
-                .build();
-        return emailNotifyJobEntity;
+                .build();*/
+
+        EmailNotifyJobEntity nextWaitingJob = emailNotifyJobRepository.findNextWaitingJob();
+
+        logger.info("this is the next job: {}", nextWaitingJob);
+
+        return nextWaitingJob;
     }
 
     @Override

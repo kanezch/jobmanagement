@@ -61,7 +61,6 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
                         .usingJobData("widgetId", schedule.getWidgetId())
                         .usingJobData("scheduleId", schedule.getId())
                         .withDescription(jobName)
-//                        .usingJobData("repository", String.valueOf(emailNotifyJobRepository))
                         .build();
 
         Trigger trigger = null;

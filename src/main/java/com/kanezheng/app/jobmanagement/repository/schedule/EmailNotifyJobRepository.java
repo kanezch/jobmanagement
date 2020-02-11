@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmailNotifyJobRepository extends CrudRepository<EmailNotifyJobEntity, Long>{
+public interface EmailNotifyJobRepository extends CrudRepository<EmailNotifyJobEntity, Long>, EmailNotifyJobRepositoryCustom{
 
 }

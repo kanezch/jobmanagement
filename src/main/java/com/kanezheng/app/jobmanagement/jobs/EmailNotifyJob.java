@@ -3,13 +3,11 @@ package com.kanezheng.app.jobmanagement.jobs;
 import com.kanezheng.app.jobmanagement.dao.schedule.EmailJobStatus;
 import com.kanezheng.app.jobmanagement.dao.schedule.EmailNotifyJobEntity;
 import com.kanezheng.app.jobmanagement.repository.schedule.EmailNotifyJobRepository;
-import com.kanezheng.app.jobmanagement.service.schedule.ScheduleServiceImpl;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.time.OffsetDateTime;
 
@@ -25,7 +23,6 @@ public class EmailNotifyJob implements Job{
 
     @Override
     public void execute(JobExecutionContext context) {
-//        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
         Scheduler scheduler = context.getScheduler();
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
@@ -46,7 +43,7 @@ public class EmailNotifyJob implements Job{
 
         logger.info("####Before save to database####, time:{}", OffsetDateTime.now());
 
-//        emailNotifyJobRepository.save(emailNotifyJobEntity);
+        emailNotifyJobRepository.save(emailNotifyJobEntity);
 
         try {
             String jobDescription = context.getJobDetail().getDescription();
