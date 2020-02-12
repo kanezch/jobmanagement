@@ -1,6 +1,5 @@
 package com.kanezheng.app.jobmanagement.repository.schedule;
 
-
 import com.kanezheng.app.jobmanagement.dao.schedule.EmailNotifyJobEntity;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +9,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 
 @Service
 public class EmailNotifyJobRepositoryCustomImpl implements EmailNotifyJobRepositoryCustom{

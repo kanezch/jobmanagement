@@ -1,6 +1,5 @@
 package com.kanezheng.app.jobmanagement.service.schedule;
 
-import com.kanezheng.app.jobmanagement.dao.schedule.EmailJobStatus;
 import com.kanezheng.app.jobmanagement.dao.schedule.EmailNotifyJobEntity;
 import com.kanezheng.app.jobmanagement.dao.schedule.EmailNotifyJobRest;
 import com.kanezheng.app.jobmanagement.exception.ResourceNotFoundException;
@@ -19,24 +18,15 @@ public class EmailNotifyJobServiceImpl implements EmailNotifyJobService {
     EmailNotifyJobRepository emailNotifyJobRepository;
 
     @Override
-    public EmailNotifyJobEntity getEmailNotifyJob() throws Exception {
-
-/*        EmailNotifyJobEntity emailNotifyJobEntity = EmailNotifyJobEntity.builder().userName("kane")
-                .dashboardId(0L)
-                .widgetId("1234-5678")
-                .scheduleId(0L)
-                .status(EmailJobStatus.STANDBY)
-                .build();*/
+    public EmailNotifyJobEntity getEmailNotifyJob() {
 
         EmailNotifyJobEntity nextWaitingJob = emailNotifyJobRepository.findNextWaitingJob();
-
-        logger.info("this is the next job: {}", nextWaitingJob);
-
+        logger.info("Get the next waiting job: {}", nextWaitingJob);
         return nextWaitingJob;
     }
 
     @Override
-    public void updateEmailNofifyJobStatus(EmailNotifyJobRest emailNotifyJobRest) throws Exception {
+    public void updateEmailNofifyJobStatus(EmailNotifyJobRest emailNotifyJobRest) {
         emailNotifyJobRepository.findById(emailNotifyJobRest.getId())
                 .map(emailNotifyJobEntity -> {
                     emailNotifyJobEntity.setStatus(emailNotifyJobRest.getStatus());

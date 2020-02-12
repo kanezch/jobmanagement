@@ -11,10 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-enum WeekDays {
-    MON,TUE,WED,THU,FRI,SAT,SUN
-}
-
 @Table(schema = "portal", name = "schedule")
 @Entity
 @Data

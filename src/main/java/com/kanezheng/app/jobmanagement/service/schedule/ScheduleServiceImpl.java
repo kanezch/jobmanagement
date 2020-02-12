@@ -16,31 +16,20 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Autowired
 	ScheduleRepository scheduleRepository;
 
-/*	@Autowired
-	private EmailNotifySchedulerService emailNotifySchedulerService;*/
-
 	@Override
-	public Schedule createSchedule(Schedule scheduleReq) throws Exception {
-
-/*		int result = emailNotifySchedulerService.createEmailNotifyJob(scheduleReq);
-		if (result == 0){
-			Schedule scheduleResp = scheduleRepository.save(scheduleReq);
-			logger.info("Create schedule in the schedule service!");
-			return scheduleResp;
-		}*/
+	public Schedule createSchedule(Schedule scheduleReq) {
 
 		return scheduleRepository.save(scheduleReq);
 	}
 
 	@Override
-	public Schedule getScheduleByWidgetId(String widgetId) throws Exception {
+	public Schedule getScheduleByWidgetId(String widgetId) {
 		return scheduleRepository.findByWidgetId(widgetId);
 	}
 
 	@Override
-	public Schedule updateSchedule(Long scheduleId, Schedule newSchedule) throws Exception {
+	public Schedule updateSchedule(Long scheduleId, Schedule newSchedule) {
 
-//		emailNotifySchedulerService.updateEmailNotifyJob(newSchedule);
 		return scheduleRepository.findById(scheduleId)
 				.map(schedule -> {
 					schedule.setScheduleName(newSchedule.getScheduleName());
@@ -61,22 +50,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public void deleteSchedule(Long scheduleId) {
-
-		try {
-//			emailNotifySchedulerService.deleteEmailNotifyJob();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		scheduleRepository.deleteById(scheduleId);
 	}
-
-/*	@Override 与下面的代码对比，建议用jpa 的 derived delete query
-	public void deleteScheduleByWidgetId(String widgetId) throws Exception{
-		Schedule schedule= scheduleRepository.findByWidgetId(widgetId);
-		if (null != schedule){
-			scheduleRepository.delete(schedule);
-		}
-	}*/
 
 	@Override
 	public void deleteScheduleByWidgetId(String widgetId){

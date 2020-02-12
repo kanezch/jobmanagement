@@ -25,20 +25,6 @@ public class EmailNotifyJobController {
     @GetMapping("/emailnotifyjob")
     public EmailNotifyJobRest getEmailNotifyJob() throws Exception {
 
-/*        //HardCoded Test
-        HashSet<String> emails = new HashSet<>();
-        emails.add("kanez@gmail.com");
-
-        EmailNotifyJobRest emailNotifyJobRest =  EmailNotifyJobRest.builder()
-                                                .id(0L)
-                                                .dashboardId(0L)
-                                                .widgetId("1234-5678")
-                                                .scheduleId(0L)
-                                                .userName("kane")
-                                                .emailRecipients(emails)
-                                                .status(EmailJobStatus.STANDBY).build();
-        logger.info("getEmailNotifyJob: {}", emailNotifyJobRest);*/
-
         //1. Get next job from the jobs queue
         //2. Get email recipients from schedule setting
         //3. Compose EmailNotifyJobRest to response to Node Server
@@ -53,7 +39,6 @@ public class EmailNotifyJobController {
                                                 .status(emailNotifyJobEntity.getStatus())
                                                 .emailRecipients(schedule.getEmailRecipients())
                                                 .build();
-
         return emailNotifyJobRest;
     }
 

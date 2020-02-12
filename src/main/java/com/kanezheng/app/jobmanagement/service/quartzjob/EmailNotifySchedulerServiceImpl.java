@@ -41,9 +41,6 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
     @Autowired
     private Scheduler scheduler;
 
-    @Autowired
-    private EmailNotifyJobRepository emailNotifyJobRepository;
-
     @Override
     public int createEmailNotifyJob(String userName, Long dashboardId, Schedule schedule) throws Exception {
 
@@ -132,6 +129,6 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
         String jobName = "EmailJob-" + namePostFix;
 
         scheduler.deleteJob(jobKey(jobName, EMAIL_NOTIFY_JOBS_GROUP));
-        logger.info("[Schedule CRUD] Delete job {} success", jobName);
+        logger.info("[Schedule CRUD] Delete email notify job {}", jobName);
     }
 }

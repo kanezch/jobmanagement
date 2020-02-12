@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.OffsetDateTime;
-
 import static com.kanezheng.app.jobmanagement.dao.schedule.EmailJobStatus.STANDBY;
 
 @Component
@@ -24,7 +22,6 @@ public class EmailNotifyJob implements Job{
     @Override
     public void execute(JobExecutionContext context) {
 
-        Scheduler scheduler = context.getScheduler();
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 
         String userName = dataMap.getString("userName");
@@ -41,15 +38,8 @@ public class EmailNotifyJob implements Job{
                                                 .status(emailJobStatus)
                                                 .build();
 
-        logger.info("####Before save to database####, time:{}", OffsetDateTime.now());
-
         emailNotifyJobRepository.save(emailNotifyJobEntity);
-
-        try {
-            String jobDescription = context.getJobDetail().getDescription();
-            logger.info("Trigger a new job: {} in scheduler {}", jobDescription, scheduler.getSchedulerName());
-        }catch (Exception e){
-
-        }
+        String jobDescription = context.getJobDetail().getDescription();
+        logger.info("[Scheduler Service] Trigger a new job: {}", jobDescription);
     }
 }
