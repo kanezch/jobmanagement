@@ -29,7 +29,7 @@ public class EmailNotifyJobRepositoryCustomImpl implements EmailNotifyJobReposit
 
         TypedQuery<EmailNotifyJobEntity> query = em.createQuery(q).setMaxResults(1);
 
-        EmailNotifyJobEntity  result = query.getSingleResult();
+        EmailNotifyJobEntity result = query.getSingleResult();
 
         return result;
     }

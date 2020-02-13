@@ -60,8 +60,9 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
                         .withDescription(jobName)
                         .build();
 
-        Trigger trigger = null;
-        Date triggerStartTime = Date.from(schedule.getInitialDeliverTime().toInstant());
+        Trigger trigger = buildTrigger(jobName, triggerName, schedule);
+/*        Date triggerStartTime = Date.from(schedule.getInitialDeliverTime().toInstant());
+
         if (schedule.getScheduleRepeatType() == ScheduleRepeatType.ONE_OFF){
 
             trigger = newTrigger()
@@ -100,24 +101,82 @@ public class EmailNotifySchedulerServiceImpl implements EmailNotifySchedulerServ
             String humanReadableTxt = ScheduleUtil.translateCronExpressToHumanReadableTxt(cronExpression);
             logger.info("[Schedule CRUD] This cron job will be triggered : {} in timezone {}", humanReadableTxt, zoneId);
         }
+*/
 
         scheduler.scheduleJob(job, trigger);
         logger.info("[Schedule CRUD] Schedule a new job:{}", jobName);
         return 0;
     }
 
-    @Override
-    public int updateEmailNotifyJob(Schedule schedule) throws Exception {
+    private Trigger buildTrigger(String jobName, String triggerName, Schedule schedule){
 
-        // Define a new Trigger
+        Trigger trigger = null;
+
+        Date triggerStartTime = Date.from(schedule.getInitialDeliverTime().toInstant());
+        if (schedule.getScheduleRepeatType() == ScheduleRepeatType.ONE_OFF){
+
+            trigger = newTrigger()
+                    .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
+                    .startAt(triggerStartTime)
+                    .forJob(jobName, EMAIL_NOTIFY_JOBS_GROUP)
+                    .build();
+
+            logger.info("[Schedule CRUD] This one time job will be triggered at {}", triggerStartTime);
+
+        }else if ((schedule.getScheduleRepeatType() == CUSTOM) &&
+                (schedule.getCustomRepeatType()== DAYS)){
+
+            trigger = newTrigger()
+                    .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
+                    .startAt(triggerStartTime)
+                    .withSchedule(simpleSchedule().withIntervalInHours(schedule.getCustomRepeatValue() * 24))
+                    .build();
+
+            logger.info("[Schedule CRUD] New job will be triggered at {}, and repeat every {} days.",
+                    triggerStartTime,schedule.getCustomRepeatValue());
+
+        }else{
+
+            String cronExpression = ScheduleUtil.composeCronExpression(schedule);
+            ZoneId zoneId = ZoneId.ofOffset("UTC",schedule.getInitialDeliverTime().getOffset());
+            TimeZone timeZone = TimeZone.getTimeZone(zoneId);
+
+            trigger = newTrigger()
+                    .withIdentity(triggerName, EMAIL_NOTIFY_JOBS_GROUP)
+                    .startNow()
+                    .withSchedule(cronSchedule(cronExpression).inTimeZone(timeZone))
+                    .forJob(jobName, EMAIL_NOTIFY_JOBS_GROUP)
+                    .build();
+
+            String humanReadableTxt = ScheduleUtil.translateCronExpressToHumanReadableTxt(cronExpression);
+            logger.info("[Schedule CRUD] This cron job will be triggered : {} in timezone {}", humanReadableTxt, zoneId);
+        }
+
+        return trigger;
+    }
+
+    @Override
+    public int updateEmailNotifyJob(String userName, Long dashboardId, String widgetId, Schedule schedule) throws Exception {
+
+        String namePostFix = ScheduleUtil.composeEmailNotifyJobName(userName,
+                dashboardId,
+                schedule.getWidgetId(),
+                schedule.getId());
+
+        String jobName = "EmailJob-" + namePostFix;
+        String triggerName = "EmailTrigger-" + namePostFix;
+
+        Trigger trigger = buildTrigger(jobName, triggerName, schedule);
+
+/*        // Define a new Trigger
         Trigger trigger = newTrigger()
                 .withIdentity("newTrigger", "group1")
                 .startNow()
                 .withSchedule(simpleSchedule().withIntervalInSeconds(5).repeatForever())
-                .build();
+                .build();*/
 
         // tell the scheduler to remove the old trigger with the given key, and put the new one in its place
-        scheduler.rescheduleJob(triggerKey("trigger1", "group1"), trigger);
+        scheduler.rescheduleJob(triggerKey(triggerName, EMAIL_NOTIFY_JOBS_GROUP), trigger);
 
         logger.info("Reschedule job, replace trigger1 with newTrigger");
         return 0;

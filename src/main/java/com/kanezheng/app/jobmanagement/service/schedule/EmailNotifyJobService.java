@@ -5,7 +5,7 @@ import com.kanezheng.app.jobmanagement.dao.schedule.EmailNotifyJobRest;
 
 public interface EmailNotifyJobService {
 
-    public EmailNotifyJobEntity getEmailNotifyJob() throws Exception;
-    public void updateEmailNofifyJobStatus(EmailNotifyJobRest emailNotifyJobRest) throws Exception;
+    EmailNotifyJobEntity getEmailNotifyJob() throws Exception;
+    void updateEmailNofifyJobStatus(EmailNotifyJobRest emailNotifyJobRest) throws Exception;
 
 }

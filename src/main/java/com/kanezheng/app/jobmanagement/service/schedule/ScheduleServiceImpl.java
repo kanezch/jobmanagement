@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
+
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
 
@@ -25,6 +28,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public Schedule getScheduleByWidgetId(String widgetId) {
 		return scheduleRepository.findByWidgetId(widgetId);
+	}
+
+	@Override
+	public Schedule getScheduleById(Long scheduleId) throws EntityNotFoundException{
+		return scheduleRepository.findById(scheduleId)
+				.orElseThrow(() -> new EntityNotFoundException("Schedule not exist"));
 	}
 
 	@Override

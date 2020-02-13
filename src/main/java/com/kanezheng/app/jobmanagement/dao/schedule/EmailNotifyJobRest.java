@@ -19,4 +19,5 @@ public class EmailNotifyJobRest {
     private Long scheduleId;
     private EmailJobStatus status;
     private Set<String> emailRecipients;
+    private String customMessage;
 }

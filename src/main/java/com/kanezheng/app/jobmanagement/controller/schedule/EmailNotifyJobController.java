@@ -32,12 +32,14 @@ public class EmailNotifyJobController {
         Schedule schedule = scheduleService.getScheduleByWidgetId(emailNotifyJobEntity.getWidgetId());
 
         EmailNotifyJobRest emailNotifyJobRest = EmailNotifyJobRest.builder()
+                                                .id(emailNotifyJobEntity.getId())
                                                 .userName(emailNotifyJobEntity.getUserName())
                                                 .dashboardId(emailNotifyJobEntity.getDashboardId())
                                                 .widgetId(emailNotifyJobEntity.getWidgetId())
                                                 .scheduleId(emailNotifyJobEntity.getScheduleId())
                                                 .status(emailNotifyJobEntity.getStatus())
                                                 .emailRecipients(schedule.getEmailRecipients())
+                                                .customMessage(schedule.getCustomMessage())
                                                 .build();
         return emailNotifyJobRest;
     }

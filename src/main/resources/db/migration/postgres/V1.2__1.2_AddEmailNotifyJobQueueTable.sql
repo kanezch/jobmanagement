@@ -8,8 +8,7 @@ CREATE TABLE portal.email_notify_jobs_queue
     id bigserial NOT NULL PRIMARY KEY,
     user_name text,
     dashboard_id bigserial NOT NULL,
-    widget_id text NOT NULL UNIQUE,
+    widget_id text NOT NULL,
     schedule_id bigserial NOT NULL,
     status integer
 );
-

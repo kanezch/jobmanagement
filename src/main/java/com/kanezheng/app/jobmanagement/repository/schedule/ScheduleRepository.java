@@ -8,7 +8,7 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface ScheduleRepository extends CrudRepository<Schedule, Long> {
-    public Schedule findByWidgetId(String WidgetId);
+    Schedule findByWidgetId(String WidgetId);
 
     @Transactional
     public void deleteByWidgetId(String WidgetId);

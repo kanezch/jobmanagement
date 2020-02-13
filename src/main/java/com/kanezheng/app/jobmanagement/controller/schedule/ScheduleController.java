@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/dashboard/{dashboardId}/widget/{widgetId}")
@@ -50,7 +51,32 @@ public class ScheduleController {
                                    @PathVariable String widgetId,
                                    @PathVariable Long scheduleId,
                                    @Valid @RequestBody Schedule scheduleRequest) throws Exception{
+
+        Schedule oldScheduleSetting = scheduleService.getScheduleById(scheduleRequest.getId());
+
+        if (bNeedToRescheduleJob(oldScheduleSetting, scheduleRequest)){
+
+            //Hard coded
+            String userName = "kane";
+            emailNotifySchedulerService.updateEmailNotifyJob(userName, dashboardId, widgetId, scheduleRequest);
+        }
+
         return scheduleService.updateSchedule(scheduleId, scheduleRequest);
+    }
+
+    private boolean bNeedToRescheduleJob(Schedule oldScheduleSetting, Schedule scheduleRequest) {
+
+        if (!oldScheduleSetting.getInitialDeliverTime().isEqual(scheduleRequest.getInitialDeliverTime()) ||
+                oldScheduleSetting.getScheduleRepeatType() != scheduleRequest.getScheduleRepeatType() ||
+                oldScheduleSetting.getCustomRepeatType() != scheduleRequest.getCustomRepeatType() ||
+                oldScheduleSetting.getCustomRepeatValue() != scheduleRequest.getCustomRepeatValue() ||
+                oldScheduleSetting.getCustomRepeatOnWeekdays() != scheduleRequest.getCustomRepeatOnWeekdays() ||
+                oldScheduleSetting.getIncludeEndTime() != scheduleRequest.getIncludeEndTime() ||
+                oldScheduleSetting.getScheduleEndTime() != scheduleRequest.getScheduleEndTime()){
+            return true;
+        }
+
+        return false;
     }
 
     @DeleteMapping("/schedule/{scheduleId}")
