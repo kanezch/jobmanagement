@@ -29,8 +29,10 @@ public class ScheduleController {
 
         logger.info("[Schedule CRUD] Request to create a schedule, schedule info = {}", schedule);
 
+        //Save the schedule setting
         Schedule scheduleResp = scheduleService.createSchedule(schedule);
 
+        //Schedule a job
         int result = emailNotifySchedulerService.createEmailNotifyJob("kane", dashboardId, schedule);
 
         if (0 == result){

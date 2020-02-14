@@ -1,5 +1,6 @@
 package com.kanezheng.app.jobmanagement.exception;
 
+import com.kanezheng.app.jobmanagement.controller.schedule.EmailNotifyJobController;
 import com.kanezheng.app.jobmanagement.controller.schedule.ScheduleController;
 import com.kanezheng.app.jobmanagement.response.ApiResponse;
 import lombok.Data;
@@ -14,18 +15,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-
-//@ControllerAdvice(assignableTypes = ScheduleController.class)
+//@ControllerAdvice(assignableTypes = EmailNotifyJobController.class)
 public class CustomExceptionHandler{
 
     Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);
-
 
     @ExceptionHandler(ScheduleNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorResponse handleScheduleNotFoundException(final ScheduleNotFoundException ex) {
-        logger.error("Schedule not found exceptioin", ex);
+        logger.info("Schedule not found exception", ex);
         return new ErrorResponse(1001, "The schedule was not found");
     }
 
@@ -35,7 +34,6 @@ public class CustomExceptionHandler{
     public final ErrorResponse handleAllExceptions(Exception ex, WebRequest request) {
 
         logger.info("CustomExceptionHandler_handleAllExceptions.");
-
         return new ErrorResponse(1000, "There is an exception.");
     }
 

@@ -20,7 +20,7 @@ public class QuartzSchedulerConfiguration {
     public SchedulerFactoryBean schedulerFactory(DataSource dataSource) {
 
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
-        schedulerFactory.setSchedulerName("scheduler_kane");
+        schedulerFactory.setSchedulerName("p3_db_scheduler");
         schedulerFactory.setConfigLocation(new ClassPathResource("quartz.properties"));
         schedulerFactory.setDataSource(dataSource);
 
@@ -34,7 +34,6 @@ public class QuartzSchedulerConfiguration {
     @Bean
     public Scheduler scheduler(SchedulerFactoryBean schedulerFactory){
         Scheduler scheduler = schedulerFactory.getScheduler();
-        System.out.println("#######scheduler start!!!@###$$$");
         return scheduler;
     }
 }

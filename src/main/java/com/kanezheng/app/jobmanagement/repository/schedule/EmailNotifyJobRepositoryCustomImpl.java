@@ -1,9 +1,11 @@
 package com.kanezheng.app.jobmanagement.repository.schedule;
 
 import com.kanezheng.app.jobmanagement.dao.schedule.EmailNotifyJobEntity;
+import com.kanezheng.app.jobmanagement.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -29,7 +31,12 @@ public class EmailNotifyJobRepositoryCustomImpl implements EmailNotifyJobReposit
 
         TypedQuery<EmailNotifyJobEntity> query = em.createQuery(q).setMaxResults(1);
 
-        EmailNotifyJobEntity result = query.getSingleResult();
+        EmailNotifyJobEntity result = null;
+        try {
+           result = query.getSingleResult();
+        }catch (NoResultException ex){
+
+        }
 
         return result;
     }
